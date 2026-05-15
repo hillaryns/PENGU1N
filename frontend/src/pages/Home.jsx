@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import StarBackground from '../components/StarBackground';
 import PublicNavbar from '../components/PublicNavbar';
-import PageTransition from '../components/PageTransition';
 import { useHeroEffects } from '../hooks/useHeroEffects';
 
 export default function Home() {
@@ -46,7 +45,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-      <PageTransition />
     </>
   );
 }

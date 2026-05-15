@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
 import SmokeBackground from '../components/SmokeBackground';
 import PublicNavbar from '../components/PublicNavbar';
-import PageTransition from '../components/PageTransition';
+import TransitionLink from '../components/TransitionLink';
 
 export default function About() {
   return (
     <>
       <SmokeBackground />
       <PublicNavbar />
-      <PageTransition />
       <main className="page">
         <div className="container">
           <header className="page-header">
@@ -30,9 +29,9 @@ export default function About() {
                   We believe in a learning-first, practice-driven approach. Instead of passive video watching,
                   we emphasize hands-on coding, interactive quizzes, and real projects.
                 </p>
-                <Link to="/signup" className="btn btn-primary">
+                <TransitionLink to="/signup" className="btn btn-primary">
                   Start Learning Today
-                </Link>
+                </TransitionLink>
               </div>
               <div className="about-visual">
                 <div className="feature-item">

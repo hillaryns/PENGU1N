@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { PageTransitionProvider } from './context/PageTransitionContext';
+import PageTransition from './components/PageTransition';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './components/DashboardLayout';
 import Home from './pages/Home';
@@ -19,32 +21,35 @@ import Profile from './pages/Profile';
 export default function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/subjects" element={<Subjects />} />
+      <PageTransitionProvider>
+        <PageTransition />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/subjects" element={<Subjects />} />
 
-        <Route
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/tests" element={<Tests />} />
-          <Route path="/classes" element={<Classes />} />
-          <Route path="/internships" element={<Internships />} />
-          <Route path="/profile" element={<Profile />} />
-        </Route>
+          <Route
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/notes" element={<Notes />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/tests" element={<Tests />} />
+            <Route path="/classes" element={<Classes />} />
+            <Route path="/internships" element={<Internships />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </PageTransitionProvider>
     </AuthProvider>
   );
 }

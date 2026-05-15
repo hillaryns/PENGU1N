@@ -1,5 +1,6 @@
 import { NavLink, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { usePageTransition } from '../context/PageTransitionContext';
 import Chatbox from './Chatbox';
 
 const navItems = [
@@ -15,7 +16,13 @@ const navItems = [
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
+  const runTransition = usePageTransition();
   const initial = user?.name?.charAt(0)?.toUpperCase() || 'S';
+
+  const handleLogout = () => {
+    logout({ silent: true });
+    runTransition('/signin');
+  };
 
   return (
     <div className="dashboard">
@@ -53,7 +60,7 @@ export default function DashboardLayout() {
             type="button"
             className="btn btn-ghost"
             style={{ width: '100%', marginTop: '1rem' }}
-            onClick={logout}
+            onClick={handleLogout}
           >
             <i className="fas fa-sign-out-alt" /> Logout
           </button>

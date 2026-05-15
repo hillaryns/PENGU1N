@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import TransitionLink from '../components/TransitionLink';
 import SmokeBackground from '../components/SmokeBackground';
 import PublicNavbar from '../components/PublicNavbar';
-import PageTransition from '../components/PageTransition';
 import { useAuth } from '../context/AuthContext';
-import { usePageTransition } from '../hooks/usePageTransition';
+import { usePageTransition } from '../context/PageTransitionContext';
 import { showToast } from '../utils/toast';
 
 export default function SignUp() {
   const { signup } = useAuth();
-  const navigateWithTransition = usePageTransition();
-  const navigate = useNavigate();
+  const runTransition = usePageTransition();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,11 +20,7 @@ export default function SignUp() {
     try {
       const user = await signup(name, email, password);
       showToast(`Welcome, ${user.name}!`);
-      if (document.getElementById('page-transition')) {
-        navigateWithTransition('/dashboard');
-      } else {
-        navigate('/dashboard');
-      }
+      runTransition('/dashboard');
     } catch (error) {
       showToast(error.message || 'Signup failed', 'error');
     } finally {
@@ -36,7 +30,6 @@ export default function SignUp() {
 
   return (
     <div className="auth-page">
-      <PageTransition />
       <SmokeBackground />
       <PublicNavbar />
       <main className="page">
@@ -88,7 +81,7 @@ export default function SignUp() {
             </button>
           </form>
           <p className="form-footer">
-            Already have an account? <Link to="/signin">Sign In</Link>
+            Already have an account? <TransitionLink to="/signin">Sign In</TransitionLink>
           </p>
         </div>
       </main>

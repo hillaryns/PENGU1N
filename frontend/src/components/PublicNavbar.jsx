@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import TransitionLink from './TransitionLink';
 
 export default function PublicNavbar() {
   const { user } = useAuth();
@@ -22,12 +23,12 @@ export default function PublicNavbar() {
               </Link>
             ) : (
               <>
-                <Link to="/signin" className="btn btn-ghost">
+                <TransitionLink to="/signin" className="btn btn-ghost">
                   Sign In
-                </Link>
-                <Link to="/signup" className="btn btn-primary">
+                </TransitionLink>
+                <TransitionLink to="/signup" className="btn btn-primary">
                   Sign Up
-                </Link>
+                </TransitionLink>
               </>
             )}
           </div>
@@ -55,12 +56,12 @@ export default function PublicNavbar() {
           </Link>
         ) : (
           <>
-            <Link to="/signin" onClick={() => setMenuOpen(false)}>
+            <TransitionLink to="/signin" onClick={() => setMenuOpen(false)}>
               Sign In
-            </Link>
-            <Link to="/signup" onClick={() => setMenuOpen(false)}>
+            </TransitionLink>
+            <TransitionLink to="/signup" onClick={() => setMenuOpen(false)}>
               Sign Up
-            </Link>
+            </TransitionLink>
           </>
         )}
       </div>

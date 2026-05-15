@@ -43,10 +43,12 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
-  const logout = () => {
+  const logout = ({ silent = false } = {}) => {
     setUser(null);
     localStorage.removeItem(STORAGE_KEY);
-    navigate('/signin');
+    if (!silent) {
+      navigate('/signin');
+    }
   };
 
   const value = useMemo(

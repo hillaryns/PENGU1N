@@ -1,9 +1,16 @@
+/** Global black-hole + SVG penguin runner (left → right). Always mounted in App. */
 export default function PageTransition() {
   return (
-    <div id="page-transition">
+    <div id="page-transition" aria-hidden="true">
       <div className="blackhole-core" />
       <div className="blackhole-stars" />
-      <svg className="penguin-runner" viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        className="penguin-runner"
+        viewBox="0 0 160 140"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="Loading"
+      >
         <ellipse cx="80" cy="80" rx="30" ry="42" fill="#0b0b0b" />
         <ellipse cx="85" cy="88" rx="20" ry="30" fill="#f5f5f5" />
         <circle cx="105" cy="40" r="18" fill="#0b0b0b" />

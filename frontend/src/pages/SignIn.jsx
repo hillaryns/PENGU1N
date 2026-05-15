@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import TransitionLink from '../components/TransitionLink';
 import SmokeBackground from '../components/SmokeBackground';
 import PublicNavbar from '../components/PublicNavbar';
-import PageTransition from '../components/PageTransition';
 import { useAuth } from '../context/AuthContext';
+import { usePageTransition } from '../context/PageTransitionContext';
 import { showToast } from '../utils/toast';
 
 export default function SignIn() {
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const runTransition = usePageTransition();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function SignIn() {
     try {
       await login(email, password);
       showToast('Login successful');
-      navigate('/dashboard');
+      runTransition('/dashboard');
     } catch (error) {
       showToast(error.message || 'Login failed', 'error');
     } finally {
@@ -29,7 +29,6 @@ export default function SignIn() {
 
   return (
     <div className="auth-page">
-      <PageTransition />
       <SmokeBackground />
       <PublicNavbar />
       <main className="page">
@@ -68,7 +67,7 @@ export default function SignIn() {
             </button>
           </form>
           <p className="form-footer">
-            Don&apos;t have an account? <Link to="/signup">Sign Up</Link>
+            Don&apos;t have an account? <TransitionLink to="/signup">Sign Up</TransitionLink>
           </p>
         </div>
       </main>
