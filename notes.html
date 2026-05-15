@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes - LEARNING HUB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">PENGU1N</a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="subjects.html" class="sidebar-link"><i class="fas fa-book-open"></i> Subjects</a>
+        <a href="notes.html" class="sidebar-link active"><i class="fas fa-sticky-note"></i> Notes</a>
+        <a href="practice.html" class="sidebar-link"><i class="fas fa-brain"></i> Practice</a>
+        <a href="tests.html" class="sidebar-link"><i class="fas fa-clipboard-check"></i> Tests</a>
+        <a href="classes.html" class="sidebar-link"><i class="fas fa-video"></i> Classes</a>
+        <a href="internships.html" class="sidebar-link"><i class="fas fa-briefcase"></i> Internships</a>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i> Profile</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost" style="width: 100%;" onclick="Auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="dashboard-header">
+        <h1 class="welcome-text">Notes 📒</h1>
+        <p class="welcome-subtitle">Topic-wise organized learning material</p>
+      </div>
+
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search notes...">
+      </div>
+
+      <div class="notes-container">
+        <div class="notes-sidebar">
+          <div class="notes-category">
+            <div class="category-title">HTML</div>
+            <a href="#" class="topic-link active" data-topic="html-intro">Introduction to HTML</a>
+            <a href="#" class="topic-link" data-topic="html-elements">HTML Elements</a>
+            <a href="#" class="topic-link" data-topic="html-forms">HTML Forms</a>
+          </div>
+          <div class="notes-category">
+            <div class="category-title">CSS</div>
+            <a href="#" class="topic-link" data-topic="css-intro">CSS Basics</a>
+            <a href="#" class="topic-link" data-topic="css-flexbox">Flexbox Layout</a>
+            <a href="#" class="topic-link" data-topic="css-grid">CSS Grid</a>
+          </div>
+          <div class="notes-category">
+            <div class="category-title">JavaScript</div>
+            <a href="#" class="topic-link" data-topic="js-intro">JS Fundamentals</a>
+            <a href="#" class="topic-link" data-topic="js-functions">Functions</a>
+            <a href="#" class="topic-link" data-topic="js-dom">DOM Manipulation</a>
+          </div>
+        </div>
+
+        <div class="notes-content" id="notesContent">
+          <h2 class="note-title">Introduction to HTML</h2>
+          
+          <div class="note-section">
+            <h3>What is HTML?</h3>
+            <p>HTML (HyperText Markup Language) is the standard markup language for creating web pages. It describes the structure of a web page using a series of elements that tell the browser how to display content.</p>
+          </div>
+
+          <div class="note-section">
+            <h3>Basic HTML Document Structure</h3>
+            <p>Every HTML document follows a basic structure:</p>
+            <div class="code-block">
+              <button class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+              <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My First Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+    &lt;p&gt;This is my first web page.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="note-section">
+            <h3>Common HTML Tags</h3>
+            <p>Here are some essential HTML tags you'll use frequently:</p>
+            <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li><code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> - Headings</li>
+              <li><code>&lt;p&gt;</code> - Paragraphs</li>
+              <li><code>&lt;a&gt;</code> - Links</li>
+              <li><code>&lt;img&gt;</code> - Images</li>
+              <li><code>&lt;div&gt;</code> - Division/Container</li>
+              <li><code>&lt;span&gt;</code> - Inline container</li>
+            </ul>
+          </div>
+
+          <div class="note-section">
+            <h3>Creating Links</h3>
+            <p>Use the anchor tag to create hyperlinks:</p>
+            <div class="code-block">
+              <button class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+              <pre><code>&lt;a href="https://example.com"&gt;Visit Example&lt;/a&gt;
+
+&lt;!-- Open in new tab --&gt;
+&lt;a href="https://example.com" target="_blank"&gt;Open in New Tab&lt;/a&gt;</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/notes-data.js"></script>
+  <script>
+    if (!Auth.currentUser) {
+      window.location.href = 'signin.html';
+    }
+
+    // Topic switching
+    document.querySelectorAll('.topic-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.topic-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        
+        const topic = this.dataset.topic;
+        if (window.notesData && window.notesData[topic]) {
+          document.getElementById('notesContent').innerHTML = window.notesData[topic];
+          // Re-init copy buttons
+          document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const code = this.closest('.code-block').querySelector('code').textContent;
+              copyToClipboard(code);
+            });
+          });
+          
+          // Track progress
+          if (Auth.currentUser) {
+            Auth.updateProgress('notesRead', (Auth.currentUser.progress.notesRead || 0) + 1);
+          }
+        }
+      });
+    });
+
+    // Init copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const code = this.closest('.code-block').querySelector('code').textContent;
+        copyToClipboard(code);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - LEARNING HUB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="smoke-bg">
+    <div class="smoke-layer smoke-1"></div>
+    <div class="smoke-layer smoke-2"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">PENGU1N</a>
+      <div class="nav-links">
+        <a href="about.html">About</a>
+        <a href="subjects.html">Subjects</a>
+        <a href="signin.html" class="btn btn-ghost">Sign In</a>
+        <a href="signup.html" class="btn btn-primary">Sign Up</a>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="page" style="display: flex; align-items: center; justify-content: center;">
+    <div class="container" style="max-width: 600px;">
+      <header class="page-header">
+        <h1 class="page-title">Contact Us</h1>
+        <p class="page-subtitle">Have questions? We'd love to hear from you!</p>
+      </header>
+
+      <div class="form-container" style="max-width: 100%;">
+        <form id="contactForm">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <input type="text" class="form-input" placeholder="How can we help?" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-input" rows="5" placeholder="Your message..." required style="resize: vertical;"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary form-btn">Send Message</button>
+        </form>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Or reach us directly:</p>
+        <div class="social-icons" style="justify-content: center;">
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      showToast('Message sent! We\'ll get back to you soon.');
+      this.reset();
+    });
+  </script>
+</body>
+</html>

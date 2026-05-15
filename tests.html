@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tests - LEARNING HUB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">PENGU1N</a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="subjects.html" class="sidebar-link"><i class="fas fa-book-open"></i> Subjects</a>
+        <a href="notes.html" class="sidebar-link"><i class="fas fa-sticky-note"></i> Notes</a>
+        <a href="practice.html" class="sidebar-link"><i class="fas fa-brain"></i> Practice</a>
+        <a href="tests.html" class="sidebar-link active"><i class="fas fa-clipboard-check"></i> Tests</a>
+        <a href="classes.html" class="sidebar-link"><i class="fas fa-video"></i> Classes</a>
+        <a href="internships.html" class="sidebar-link"><i class="fas fa-briefcase"></i> Internships</a>
+        <a href="profile.html" class="sidebar-link"><i class="fas fa-user"></i> Profile</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost" style="width: 100%;" onclick="Auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="dashboard-header">
+        <h1 class="welcome-text">Tests 📝</h1>
+        <p class="welcome-subtitle">Challenge yourself with timed assessments</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">HTML Fundamentals</h3>
+            <span class="test-badge">Beginner</span>
+          </div>
+          <div class="test-meta">
+            <span><i class="fas fa-question-circle"></i> 10 Questions</span>
+            <span><i class="fas fa-clock"></i> 10 mins</span>
+          </div>
+          <div class="test-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="startTest('html-basics')">Start Test</button>
+        </div>
+
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">CSS Styling</h3>
+            <span class="test-badge">Beginner</span>
+          </div>
+          <div class="test-meta">
+            <span><i class="fas fa-question-circle"></i> 10 Questions</span>
+            <span><i class="fas fa-clock"></i> 10 mins</span>
+          </div>
+          <div class="test-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="startTest('css-basics')">Start Test</button>
+        </div>
+
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">JavaScript Essentials</h3>
+            <span class="test-badge" style="background: rgba(234, 179, 8, 0.1); color: #eab308;">Intermediate</span>
+          </div>
+          <div class="test-meta">
+            <span><i class="fas fa-question-circle"></i> 15 Questions</span>
+            <span><i class="fas fa-clock"></i> 15 mins</span>
+          </div>
+          <div class="test-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="startTest('js-basics')">Start Test</button>
+        </div>
+
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">Python Programming</h3>
+            <span class="test-badge" style="background: rgba(234, 179, 8, 0.1); color: #eab308;">Intermediate</span>
+          </div>
+          <div class="test-meta">
+            <span><i class="fas fa-question-circle"></i> 15 Questions</span>
+            <span><i class="fas fa-clock"></i> 15 mins</span>
+          </div>
+          <div class="test-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="startTest('python-basics')">Start Test</button>
+        </div>
+
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">Full Stack Challenge</h3>
+            <span class="test-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">Advanced</span>
+          </div>
+          <div class="test-meta">
+            <span><i class="fas fa-question-circle"></i> 25 Questions</span>
+            <span><i class="fas fa-clock"></i> 30 mins</span>
+          </div>
+          <div class="test-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="startTest('fullstack')">Start Test</button>
+        </div>
+      </div>
+
+      <!-- Test Results Section -->
+      <h2 class="section-title" style="margin-top: 3rem;">Recent Results</h2>
+      <div id="testResults">
+        <p style="color: var(--text-secondary);">No tests taken yet. Start a test above!</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Test Modal -->
+  <div class="modal-overlay" id="testModal">
+    <div class="modal" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="testModalTitle">Test</h3>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span id="testTimer" style="font-weight: 600; color: var(--accent-primary);">10:00</span>
+          <button class="modal-close" onclick="closeTestModal()"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div id="testContent">
+        <!-- Test questions will be rendered here -->
+      </div>
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="btn btn-ghost" id="prevBtn" onclick="prevQuestion()">Previous</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitTest()" style="display: none;">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    if (!Auth.currentUser) {
+      window.location.href = 'signin.html';
+    }
+
+    // Test data
+    const tests = {
+      'html-basics': {
+        title: 'HTML Fundamentals',
+        duration: 600,
+        questions: [
+          { q: 'What does HTML stand for?', options: ['Hyper Text Markup Language', 'High Tech ML', 'Hyperlink Text', 'None'], correct: 0 },
+          { q: 'Which tag creates a paragraph?', options: ['<p>', '<para>', '<text>', '<paragraph>'], correct: 0 },
+          { q: 'Which is a self-closing tag?', options: ['<div>', '<span>', '<img>', '<p>'], correct: 2 },
+          { q: 'What is the correct HTML for a hyperlink?', options: ['<a url="...">', '<link href="...">', '<a href="...">', '<hyperlink>'], correct: 2 },
+          { q: 'Which attribute specifies an image source?', options: ['href', 'src', 'link', 'source'], correct: 1 }
+        ]
+      },
+      'css-basics': {
+        title: 'CSS Styling',
+        duration: 600,
+        questions: [
+          { q: 'What does CSS stand for?', options: ['Cascading Style Sheets', 'Computer Style Sheets', 'Creative Styling', 'None'], correct: 0 },
+          { q: 'Which property changes text color?', options: ['font-color', 'text-color', 'color', 'foreground'], correct: 2 },
+          { q: 'How do you select an element with id "demo"?', options: ['.demo', '#demo', 'demo', '*demo'], correct: 1 },
+          { q: 'Which property adds space inside an element?', options: ['margin', 'padding', 'border', 'spacing'], correct: 1 },
+          { q: 'What is the default display of a div?', options: ['inline', 'block', 'flex', 'none'], correct: 1 }
+        ]
+      },
+      'js-basics': {
+        title: 'JavaScript Essentials',
+        duration: 900,
+        questions: [
+          { q: 'Which keyword declares a constant?', options: ['var', 'let', 'const', 'static'], correct: 2 },
+          { q: 'What is typeof []?', options: ['array', 'object', 'list', 'undefined'], correct: 1 },
+          { q: 'How do you write a comment?', options: ['// comment', '/* comment */', 'Both A and B', '# comment'], correct: 2 },
+          { q: 'Which method adds to end of array?', options: ['push()', 'pop()', 'shift()', 'unshift()'], correct: 0 },
+          { q: 'What is NaN?', options: ['Not a Number', 'Null', 'Undefined', 'Error'], correct: 0 }
+        ]
+      },
+      'python-basics': {
+        title: 'Python Programming',
+        duration: 900,
+        questions: [
+          { q: 'How do you print in Python?', options: ['console.log()', 'print()', 'echo()', 'write()'], correct: 1 },
+          { q: 'How to start a comment?', options: ['//', '#', '/*', '--'], correct: 1 },
+          { q: 'Which is a Python data type?', options: ['int', 'integer', 'number', 'num'], correct: 0 },
+          { q: 'What does len() return?', options: ['Length', 'Size', 'Count', 'All of above'], correct: 0 },
+          { q: 'How to define a function?', options: ['function', 'def', 'func', 'fn'], correct: 1 }
+        ]
+      },
+      'fullstack': {
+        title: 'Full Stack Challenge',
+        duration: 1800,
+        questions: [
+          { q: 'What is REST?', options: ['Representational State Transfer', 'Remote State', 'Request State', 'None'], correct: 0 },
+          { q: 'Which HTTP method updates data?', options: ['GET', 'POST', 'PUT', 'DELETE'], correct: 2 },
+          { q: 'What is JSON?', options: ['JavaScript Object Notation', 'Java Syntax', 'Query Language', 'None'], correct: 0 },
+          { q: 'What does API stand for?', options: ['Application Programming Interface', 'App Protocol', 'Access Point', 'None'], correct: 0 },
+          { q: 'What is CORS?', options: ['Cross-Origin Resource Sharing', 'Central Origin', 'Cross Request', 'None'], correct: 0 }
+        ]
+      }
+    };
+
+    let currentTest = null;
+    let currentQuestion = 0;
+    let answers = [];
+    let timerInterval = null;
+    let timeRemaining = 0;
+
+    function startTest(testId) {
+      currentTest = tests[testId];
+      currentQuestion = 0;
+      answers = new Array(currentTest.questions.length).fill(null);
+      timeRemaining = currentTest.duration;
+      
+      document.getElementById('testModalTitle').textContent = currentTest.title;
+      document.getElementById('testModal').classList.add('active');
+      
+      renderQuestion();
+      startTimer();
+    }
+
+    function renderQuestion() {
+      const q = currentTest.questions[currentQuestion];
+      document.getElementById('testContent').innerHTML = `
+        <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Question ${currentQuestion + 1} of ${currentTest.questions.length}</p>
+        <p class="question-text" style="font-size: 1.125rem; margin-bottom: 1.5rem;">${q.q}</p>
+        <div class="options-list">
+          ${q.options.map((opt, i) => `
+            <div class="option-item ${answers[currentQuestion] === i ? 'selected' : ''}" onclick="selectAnswer(${i})">
+              <div class="option-radio"></div>
+              <span>${opt}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      document.getElementById('prevBtn').style.display = currentQuestion === 0 ? 'none' : 'inline-flex';
+      document.getElementById('nextBtn').style.display = currentQuestion === currentTest.questions.length - 1 ? 'none' : 'inline-flex';
+      document.getElementById('submitBtn').style.display = currentQuestion === currentTest.questions.length - 1 ? 'inline-flex' : 'none';
+    }
+
+    function selectAnswer(index) {
+      answers[currentQuestion] = index;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < currentTest.questions.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+      }
+    }
+
+    function startTimer() {
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) {
+          submitTest();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      document.getElementById('testTimer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function submitTest() {
+      clearInterval(timerInterval);
+      
+      let score = 0;
+      currentTest.questions.forEach((q, i) => {
+        if (answers[i] === q.correct) score++;
+      });
+      
+      const percentage = Math.round((score / currentTest.questions.length) * 100);
+      
+      // Save result
+      const results = JSON.parse(localStorage.getItem('test_results') || '[]');
+      results.unshift({
+        test: currentTest.title,
+        score: score,
+        total: currentTest.questions.length,
+        percentage: percentage,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem('test_results', JSON.stringify(results.slice(0, 10)));
+      
+      // Update progress
+      if (Auth.currentUser) {
+        Auth.updateProgress('testsTaken', (Auth.currentUser.progress.testsTaken || 0) + 1);
+      }
+      
+      // Show result
+      document.getElementById('testContent').innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">${percentage >= 70 ? '🎉' : '📚'}</div>
+          <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">${percentage}%</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">You scored ${score} out of ${currentTest.questions.length}</p>
+          <p style="color: ${percentage >= 70 ? 'var(--success)' : 'var(--warning)'}; font-weight: 600;">
+            ${percentage >= 70 ? 'Great job! Keep it up!' : 'Keep practicing, you\'ll get there!'}
+          </p>
+        </div>
+      `;
+      
+      document.getElementById('prevBtn').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('submitBtn').textContent = 'Close';
+      document.getElementById('submitBtn').onclick = closeTestModal;
+      
+      loadResults();
+    }
+
+    function closeTestModal() {
+      clearInterval(timerInterval);
+      document.getElementById('testModal').classList.remove('active');
+      document.getElementById('submitBtn').textContent = 'Submit';
+      document.getElementById('submitBtn').onclick = submitTest;
+    }
+
+    function loadResults() {
+      const results = JSON.parse(localStorage.getItem('test_results') || '[]');
+      const container = document.getElementById('testResults');
+      
+      if (results.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary);">No tests taken yet. Start a test above!</p>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <div class="grid grid-3">
+          ${results.slice(0, 6).map(r => `
+            <div class="card">
+              <h4 style="margin-bottom: 0.5rem;">${r.test}</h4>
+              <p style="font-size: 1.5rem; font-weight: 800; color: ${r.percentage >= 70 ? 'var(--success)' : 'var(--warning)'};">${r.percentage}%</p>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">${new Date(r.date).toLocaleDateString()}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    loadResults();
+  </script>
+</body>
+</html>

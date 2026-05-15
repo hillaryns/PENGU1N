@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - LEARNING HUB</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">PENGU1N</a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="subjects.html" class="sidebar-link"><i class="fas fa-book-open"></i> Subjects</a>
+        <a href="notes.html" class="sidebar-link"><i class="fas fa-sticky-note"></i> Notes</a>
+        <a href="practice.html" class="sidebar-link"><i class="fas fa-brain"></i> Practice</a>
+        <a href="tests.html" class="sidebar-link"><i class="fas fa-clipboard-check"></i> Tests</a>
+        <a href="classes.html" class="sidebar-link"><i class="fas fa-video"></i> Classes</a>
+        <a href="internships.html" class="sidebar-link"><i class="fas fa-briefcase"></i> Internships</a>
+        <a href="profile.html" class="sidebar-link active"><i class="fas fa-user"></i> Profile</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost" style="width: 100%;" onclick="Auth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar">S</div>
+        <div class="profile-info">
+          <h2 id="profileName">Student</h2>
+          <p id="profileEmail">student@example.com</p>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="profileNotes">0</div>
+              <div class="profile-stat-label">Notes Read</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="profileQuestions">0</div>
+              <div class="profile-stat-label">Questions</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="profileTests">0</div>
+              <div class="profile-stat-label">Tests</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Badges & Achievements 🏆</h2>
+      <div class="badges-grid">
+        <div class="badge-card" id="badge-starter">
+          <div class="badge-icon">🌟</div>
+          <div class="badge-name">Getting Started</div>
+          <div class="badge-description">Completed profile setup</div>
+        </div>
+        <div class="badge-card" id="badge-reader">
+          <div class="badge-icon">📚</div>
+          <div class="badge-name">Bookworm</div>
+          <div class="badge-description">Read 10 notes</div>
+        </div>
+        <div class="badge-card" id="badge-solver">
+          <div class="badge-icon">🧩</div>
+          <div class="badge-name">Problem Solver</div>
+          <div class="badge-description">Answer 25 questions</div>
+        </div>
+        <div class="badge-card" id="badge-tester">
+          <div class="badge-icon">📝</div>
+          <div class="badge-name">Test Taker</div>
+          <div class="badge-description">Complete 5 tests</div>
+        </div>
+        <div class="badge-card locked" id="badge-master">
+          <div class="badge-icon">🎓</div>
+          <div class="badge-name">Subject Master</div>
+          <div class="badge-description">Score 90%+ on all tests</div>
+        </div>
+        <div class="badge-card locked" id="badge-streak">
+          <div class="badge-icon">🔥</div>
+          <div class="badge-name">On Fire</div>
+          <div class="badge-description">7 day learning streak</div>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 2rem;">Account Settings</h2>
+      <div class="card" style="max-width: 500px;">
+        <form id="profileForm">
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <input type="text" class="form-input" id="editName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="editEmail" disabled>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    if (!Auth.currentUser) {
+      window.location.href = 'signin.html';
+    }
+
+    const user = Auth.currentUser;
+    const progress = user.progress || {};
+
+    // Populate profile
+    document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('profileName').textContent = user.name;
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('profileNotes').textContent = progress.notesRead || 0;
+    document.getElementById('profileQuestions').textContent = progress.questionsAnswered || 0;
+    document.getElementById('profileTests').textContent = progress.testsTaken || 0;
+
+    // Form
+    document.getElementById('editName').value = user.name;
+    document.getElementById('editEmail').value = user.email;
+
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newName = document.getElementById('editName').value;
+      
+      user.name = newName;
+      localStorage.setItem('learninghub_user', JSON.stringify(user));
+      
+      // Update in users array
+      const users = JSON.parse(localStorage.getItem('learninghub_users') || '[]');
+      const userIndex = users.findIndex(u => u.id === user.id);
+      if (userIndex !== -1) {
+        users[userIndex].name = newName;
+        localStorage.setItem('learninghub_users', JSON.stringify(users));
+      }
+      
+      showToast('Profile updated!');
+      document.getElementById('profileName').textContent = newName;
+      document.getElementById('profileAvatar').textContent = newName.charAt(0).toUpperCase();
+    });
+
+    // Update badge status
+    function updateBadges() {
+      if (progress.notesRead >= 10) {
+        document.getElementById('badge-reader').classList.remove('locked');
+      }
+      if (progress.questionsAnswered >= 25) {
+        document.getElementById('badge-solver').classList.remove('locked');
+      }
+      if (progress.testsTaken >= 5) {
+        document.getElementById('badge-tester').classList.remove('locked');
+      }
+    }
+
+    updateBadges();
+  </script>
+</body>
+</html>
