@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 
@@ -23,29 +23,56 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
-    const data = await api.login({ email, password });
+  const persistUser = useCallback((nextUser) => {
+    setUser(nextUser);
+    if (nextUser) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextUser));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
+  const login = async (identifier, password) => {
+    const data = await api.login({ identifier, password });
     if (!data.success) {
       throw new Error(data.message || 'Login failed');
     }
-    setUser(data.user);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
+    persistUser(data.user);
     return data.user;
   };
 
-  const signup = async (name, email, password) => {
-    const data = await api.signup({ name, email, password });
+  const signup = async (fields) => {
+    const data = await api.signup({
+      username: fields.username,
+      email: fields.email,
+      password: fields.password,
+      confirmPassword: fields.confirmPassword,
+    });
     if (!data.success) {
       throw new Error(data.message || 'Signup failed');
     }
-    setUser(data.user);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
+    return data;
+  };
+
+  const verifyEmail = async (email, otp) => {
+    const data = await api.verifyEmail({ email, otp });
+    if (!data.success) {
+      throw new Error(data.message || 'Verification failed');
+    }
+    persistUser(data.user);
     return data.user;
   };
 
+  const resendVerification = async (email) => {
+    const data = await api.resendVerification({ email });
+    if (!data.success) {
+      throw new Error(data.message || 'Could not resend');
+    }
+    return data;
+  };
+
   const logout = ({ silent = false } = {}) => {
-    setUser(null);
-    localStorage.removeItem(STORAGE_KEY);
+    persistUser(null);
     if (!silent) {
       navigate('/signin');
     }
@@ -62,10 +89,18 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const value = useMemo(
-    () => ({ user, loading, login, signup, logout, refreshUser, isAuthenticated: !!user }),
-    [user, loading],
-  );
+  const value = {
+    user,
+    loading,
+    login,
+    signup,
+    verifyEmail,
+    resendVerification,
+    logout,
+    refreshUser,
+    isAuthenticated: !!user,
+    isVerified: !!user && user.verified !== false,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
