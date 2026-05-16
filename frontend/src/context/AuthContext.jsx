@@ -6,6 +6,15 @@ const AuthContext = createContext(null);
 
 const STORAGE_KEY = 'user';
 
+function getUserEmailFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw).email : null;
+  } catch {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -89,6 +98,48 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const applyProfile = useCallback((profile) => {
+    if (!profile) return;
+    setUser((prev) => {
+      if (!prev) return prev;
+      const merged = {
+        ...prev,
+        ...profile,
+        verified: prev.verified,
+        profileUpdatedAt: Date.now(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      return merged;
+    });
+  }, []);
+
+  const fetchProfile = useCallback(async () => {
+    const email = getUserEmailFromStorage();
+    if (!email) return null;
+    try {
+      const data = await api.getProfile('me');
+      if (data.profile) {
+        setUser((prev) => {
+          const merged = prev
+            ? { ...prev, ...data.profile, verified: prev.verified, profileUpdatedAt: Date.now() }
+            : { ...data.profile, profileUpdatedAt: Date.now() };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          return merged;
+        });
+      }
+      return data;
+    } catch (err) {
+      console.warn('[profile] fetch failed', err.message);
+      return null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user?.email || user.verified === false) return;
+    fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once per email
+  }, [user?.email]);
+
   const value = {
     user,
     loading,
@@ -98,6 +149,9 @@ export function AuthProvider({ children }) {
     resendVerification,
     logout,
     refreshUser,
+    fetchProfile,
+    applyProfile,
+    persistUser,
     isAuthenticated: !!user,
     isVerified: !!user && user.verified !== false,
   };

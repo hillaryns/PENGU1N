@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import TransitionLink from './TransitionLink';
+import ProfileMenu from './profile/ProfileMenu';
 
 export default function PublicNavbar() {
   const { user } = useAuth();
@@ -18,9 +19,7 @@ export default function PublicNavbar() {
             <NavLink to="/about">About</NavLink>
             <NavLink to="/subjects">Subjects</NavLink>
             {user ? (
-              <Link to="/dashboard" className="btn btn-primary">
-                Dashboard
-              </Link>
+              <ProfileMenu />
             ) : (
               <>
                 <TransitionLink to="/signin" className="btn btn-ghost">
@@ -51,9 +50,10 @@ export default function PublicNavbar() {
           Subjects
         </Link>
         {user ? (
-          <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
-            Dashboard
-          </Link>
+          <div className="mobile-profile-menu-wrap" onClick={() => setMenuOpen(false)}>
+            <ProfileMenu compact />
+            <Link to="/dashboard">Dashboard</Link>
+          </div>
         ) : (
           <>
             <TransitionLink to="/signin" onClick={() => setMenuOpen(false)}>

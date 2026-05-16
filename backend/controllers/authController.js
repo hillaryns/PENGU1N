@@ -21,26 +21,17 @@ const RESEND_COOLDOWN_MS = 60 * 1000;
 const MAX_OTP_ATTEMPTS = 5;
 const LOCKOUT_MS = 30 * 60 * 1000;
 
-const defaultProgress = () => ({
-  notesRead: 0,
-  questionsAnswered: 0,
-  testsTaken: 0,
-  badges: [],
-});
+const { buildPublicProfile } = require('../utils/userProfile');
+const { defaultGamificationProgress } = require('../services/achievementService');
 
 function isLegacyVerified(doc) {
   return doc.verified === undefined || doc.verified === null || doc.verified === true;
 }
 
 function publicUser(doc) {
-  const verified = isLegacyVerified(doc);
-  return {
-    name: doc.name || doc.username || 'Student',
-    username: doc.username || doc.email?.split('@')[0] || '',
-    email: doc.email,
-    verified,
-    progress: doc.progress || defaultProgress(),
-  };
+  const profile = buildPublicProfile(doc);
+  if (!profile) return null;
+  return { ...profile, verified: isLegacyVerified(doc) };
 }
 
 async function ensureUsername(usersCollection, email, fallbackName) {
@@ -175,7 +166,12 @@ module.exports = (usersCollection) => ({
         verificationOTPExpiry: new Date(Date.now() + OTP_TTL_MS),
         verificationAttempts: 0,
         verificationLockUntil: null,
-        progress: defaultProgress(),
+        gamification: defaultGamificationProgress(),
+        profileCompletion: 0,
+        bio: '',
+        displayName: displayName,
+        profilePicture: null,
+        badgeHistory: [],
         createdAt: new Date(),
         lastResendVerificationAt: new Date(0),
       });

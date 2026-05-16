@@ -11,6 +11,12 @@ export const DEFAULT_PROGRESS = {
   subjectProgress: {},
   badges: [],
   leaderboardName: null,
+  stats: {
+    studyMinutes: 0,
+    perfectScores: 0,
+    testsCompleted: 0,
+    lastStudyHour: null,
+  },
 };
 
 export function loadProgress() {

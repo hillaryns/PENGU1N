@@ -6,6 +6,8 @@ import './styles/style.css';
 import './styles/premium.css';
 import './styles/functional.css';
 import './styles/auth-advanced.css';
+import './styles/profile-gamification.css';
+import './styles/global-profile.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

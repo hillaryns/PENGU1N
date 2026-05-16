@@ -1,0 +1,539 @@
+/* Gamified profile & achievements */
+
+.profile-gamified {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+
+.profile-hero-card {
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-hero-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.profile-avatar-hero-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-avatar-hero-wrap .profile-level-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(100, 180, 255, 0.5);
+  box-shadow: 0 0 40px rgba(64, 156, 255, 0.35);
+  flex-shrink: 0;
+  background: linear-gradient(145deg, rgba(20, 40, 80, 0.9), rgba(8, 18, 40, 0.95));
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.profile-level-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: linear-gradient(135deg, #3d8bff, #5eb8ff);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  border: 2px solid rgba(8, 16, 36, 0.9);
+}
+
+.profile-hero-info h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+}
+
+.profile-username {
+  color: rgba(160, 190, 230, 0.85);
+  margin: 0 0 0.35rem;
+}
+
+.profile-rank-title {
+  font-weight: 700;
+  color: #5eb8ff;
+  margin: 0 0 0.5rem;
+  text-shadow: 0 0 20px rgba(94, 184, 255, 0.4);
+}
+
+.profile-bio-text {
+  color: rgba(200, 220, 245, 0.9);
+  max-width: 420px;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.profile-edit-btn {
+  margin-top: 0.25rem;
+}
+
+.profile-top-badge {
+  margin-left: auto;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  background: rgba(255, 200, 80, 0.08);
+  border: 1px solid rgba(255, 200, 80, 0.35);
+  box-shadow: 0 0 30px rgba(255, 200, 80, 0.15);
+}
+
+.top-badge-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+
+.top-badge-icon {
+  font-size: 2rem;
+  display: block;
+}
+
+.profile-completion-block,
+.xp-level-block {
+  margin-top: 1.25rem;
+}
+
+.completion-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.completion-pct {
+  font-weight: 700;
+  color: #5eb8ff;
+}
+
+.completion-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(80, 220, 160, 0.2);
+  color: #6af0b5;
+}
+
+.completion-bar-track,
+.xp-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.completion-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2d6cdf, #5eb8ff);
+  border-radius: 999px;
+  box-shadow: 0 0 16px rgba(94, 184, 255, 0.5);
+}
+
+.xp-level-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5af0b5, #3d8bff, #a080ff);
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(94, 184, 255, 0.45);
+}
+
+.xp-total {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-stat-card {
+  padding: 1rem;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(12, 28, 58, 0.55), rgba(6, 14, 36, 0.72));
+  border: 1px solid rgba(100, 180, 255, 0.2);
+  text-align: center;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.stat-card-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.stat-card-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.stat-card-label {
+  font-size: 0.78rem;
+  opacity: 0.75;
+}
+
+.achievement-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(12, 28, 58, 0.45);
+  border: 1px solid rgba(100, 180, 255, 0.15);
+}
+
+.timeline-icon {
+  font-size: 1.75rem;
+}
+
+.timeline-date {
+  display: block;
+  font-size: 0.78rem;
+  opacity: 0.65;
+}
+
+.badges-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.badge-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge-filter-btn {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(100, 180, 255, 0.3);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.badge-filter-btn.active {
+  background: rgba(64, 156, 255, 0.25);
+  border-color: rgba(100, 180, 255, 0.6);
+}
+
+.gamified-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.gamified-badge-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.1rem 0.75rem;
+  border-radius: 16px;
+  border: 1px solid var(--badge-border);
+  background: rgba(8, 18, 40, 0.65);
+  cursor: pointer;
+  color: inherit;
+  overflow: hidden;
+  transition: box-shadow 0.35s ease;
+}
+
+.gamified-badge-card.unlocked {
+  box-shadow: 0 0 28px var(--badge-glow);
+}
+
+.gamified-badge-card.locked {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+.badge-card-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.08) 50%, transparent 60%);
+  animation: badge-shine 3s ease-in-out infinite;
+}
+
+@keyframes badge-shine {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.gamified-badge-icon {
+  font-size: 2.25rem;
+  margin-bottom: 0.35rem;
+  animation: badge-pulse 2.5s ease-in-out infinite;
+}
+
+.gamified-badge-card.unlocked .gamified-badge-icon {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.gamified-badge-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.gamified-badge-desc {
+  font-size: 0.72rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+  line-height: 1.3;
+}
+
+.gamified-badge-rarity {
+  margin-top: 0.5rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.rarity-legendary.gamified-badge-rarity { color: #ffc850; }
+.rarity-epic.gamified-badge-rarity { color: #c090ff; }
+.rarity-rare.gamified-badge-rarity { color: #50dcb4; }
+.rarity-common.gamified-badge-rarity { color: #8ab4ff; }
+
+/* Edit profile modal */
+.profile-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.profile-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.profile-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.75rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.avatar-drop-zone {
+  border: 2px dashed rgba(100, 180, 255, 0.4);
+  border-radius: 16px;
+  padding: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.avatar-drop-zone.drag-over {
+  border-color: #5eb8ff;
+  background: rgba(64, 156, 255, 0.1);
+}
+
+.avatar-preview-ring {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(100, 180, 255, 0.5);
+  box-shadow: 0 0 30px rgba(64, 156, 255, 0.3);
+}
+
+.avatar-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-preview-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2rem;
+  font-weight: 800;
+  background: rgba(20, 40, 80, 0.8);
+}
+
+.drop-hint {
+  font-size: 0.82rem;
+  opacity: 0.75;
+  margin: 0 0 0.75rem;
+}
+
+.avatar-modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Badge unlock overlay */
+.badge-unlock-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.badge-unlock-card {
+  position: relative;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(12, 28, 58, 0.95), rgba(6, 14, 36, 0.98));
+  border: 1px solid rgba(255, 200, 80, 0.4);
+  box-shadow: 0 0 60px rgba(255, 200, 80, 0.25);
+  max-width: 360px;
+}
+
+.badge-unlock-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 32px;
+  background: radial-gradient(circle, rgba(255, 200, 80, 0.2) 0%, transparent 70%);
+  animation: unlock-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes unlock-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.badge-unlock-icon {
+  font-size: 4rem;
+  position: relative;
+  animation: badge-pulse 0.8s ease-in-out infinite;
+}
+
+.badge-unlock-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.confetti-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 8px;
+  height: 8px;
+  background: hsl(calc(var(--i) * 15), 80%, 60%);
+  border-radius: 2px;
+  animation: confetti-fly 1.2s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.03s);
+  transform: rotate(calc(var(--i) * 24deg));
+}
+
+@keyframes confetti-fly {
+  to {
+    transform: translate(
+        calc(cos(var(--i)) * 180px),
+        calc(sin(var(--i)) * 220px)
+      )
+      rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-hero-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .profile-top-badge {
+    margin-left: 0;
+  }
+}

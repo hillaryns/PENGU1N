@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useAuth } from './AuthContext';
+import { api } from '../api/client';
+import { BADGES } from '../data/badges';
 import {
   DEFAULT_PROGRESS,
   loadProgress,
@@ -9,38 +11,91 @@ import {
 
 const ProgressContext = createContext(null);
 
-const BADGE_RULES = [
-  { id: 'first-test', icon: '📝', name: 'First Steps', check: (p) => Object.keys(p.testResults || {}).some((k) => p.testResults[k]?.attempts) },
-  { id: 'quiz-ace', icon: '🏆', name: 'Quiz Ace', check: (p) => Object.values(p.testResults || {}).some((r) => r.passed) },
-  { id: 'note-reader', icon: '📚', name: 'Note Reader', check: (p) => (p.notesRead?.length || 0) >= 5 },
-  { id: 'video-binger', icon: '🎬', name: 'Binge Learner', check: (p) => Object.keys(p.videosWatched || {}).length >= 3 },
-  { id: 'xp-500', icon: '⚡', name: 'XP Hunter', check: (p) => (p.xp || 0) >= 500 },
-  { id: 'streak-3', icon: '🔥', name: 'On Fire', check: (p) => (p.streak || 0) >= 3 },
-];
-
-function awardBadges(progress) {
-  const badges = new Set(progress.badges || []);
-  BADGE_RULES.forEach((rule) => {
-    if (rule.check(progress)) badges.add(rule.id);
-  });
-  return { ...progress, badges: [...badges] };
+function mergeFromServer(local, serverGamification) {
+  if (!serverGamification) return local;
+  return {
+    ...local,
+    xp: Math.max(local.xp || 0, serverGamification.xp || 0),
+    streak: Math.max(local.streak || 0, serverGamification.streak || 0),
+    notesRead: [...new Set([...(local.notesRead || []), ...(serverGamification.notesRead || [])])],
+    videosWatched: { ...(local.videosWatched || {}), ...(serverGamification.videosWatched || {}) },
+    testResults: { ...(local.testResults || {}), ...(serverGamification.testResults || {}) },
+    badges: [...new Set([...(local.badges || []), ...(serverGamification.badges || [])])],
+    level: serverGamification.level,
+    rank: serverGamification.rank,
+  };
 }
 
 export function ProgressProvider({ children }) {
-  const { refreshUser } = useAuth();
+  const { user, persistUser, isAuthenticated } = useAuth();
   const [progress, setProgress] = useState(loadProgress);
+  const [pendingUnlocks, setPendingUnlocks] = useState([]);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
-    setProgress(touchStreak(loadProgress()));
-  }, []);
+    const initial = touchStreak(loadProgress());
+    if (user?.gamification) {
+      setProgress(mergeFromServer(initial, user.gamification));
+    } else {
+      setProgress(initial);
+    }
+  }, [user?.email]);
 
-  const persist = useCallback((next) => {
-    const withStreak = awardBadges(touchStreak(next));
-    setProgress(withStreak);
-    saveProgress(withStreak);
-    refreshUser();
-    return withStreak;
-  }, [refreshUser]);
+  const syncToServer = useCallback(
+    async (nextProgress) => {
+      if (!isAuthenticated || !user?.email) return null;
+      try {
+        setSyncing(true);
+        const data = await api.syncProgress(nextProgress, 2);
+        if (data.progress) {
+          saveProgress(data.progress);
+          setProgress(data.progress);
+        }
+        if (data.profile) {
+          persistUser({
+            ...user,
+            ...data.profile,
+            verified: user.verified,
+            profileUpdatedAt: Date.now(),
+          });
+        }
+        if (data.newlyUnlocked?.length) {
+          setPendingUnlocks((prev) => [...prev, ...data.newlyUnlocked]);
+        }
+        return data;
+      } catch (err) {
+        console.warn('[progress] sync failed', err.message);
+        return null;
+      } finally {
+        setSyncing(false);
+      }
+    },
+    [isAuthenticated, user, persistUser],
+  );
+
+  const persist = useCallback(
+    (next) => {
+      const withStreak = touchStreak(next);
+      const hour = new Date().getHours();
+      const withStats = {
+        ...withStreak,
+        stats: {
+          ...(withStreak.stats || {}),
+          lastStudyHour: hour,
+          studyMinutes: (withStreak.stats?.studyMinutes || 0) + 2,
+        },
+      };
+      setProgress(withStats);
+      saveProgress(withStats);
+      syncToServer(withStats);
+      return withStats;
+    },
+    [syncToServer],
+  );
+
+  const dismissUnlock = useCallback((id) => {
+    setPendingUnlocks((prev) => prev.filter((b) => b.id !== id));
+  }, []);
 
   const addXP = useCallback(
     (amount) => {
@@ -71,13 +126,14 @@ export function ProgressProvider({ children }) {
       const xpBonus = percent >= 50 && !progress.videosWatched?.[videoId]?.completed ? 25 : 0;
       persist({ ...progress, videosWatched, xp: (progress.xp || 0) + xpBonus });
     },
-    [progress, persist, addXP],
+    [progress, persist],
   );
 
   const recordTestResult = useCallback(
     (testId, { score, total, passed, xpEarned }) => {
       const prev = progress.testResults?.[testId] || { attempts: 0, bestScore: 0 };
       const bestScore = Math.max(prev.bestScore || 0, score);
+      const isPerfect = score >= 100;
       const testResults = {
         ...(progress.testResults || {}),
         [testId]: {
@@ -91,7 +147,16 @@ export function ProgressProvider({ children }) {
           xpEarned: (prev.xpEarned || 0) + xpEarned,
         },
       };
-      persist({ ...progress, testResults, xp: (progress.xp || 0) + xpEarned });
+      persist({
+        ...progress,
+        testResults,
+        xp: (progress.xp || 0) + xpEarned,
+        stats: {
+          ...(progress.stats || {}),
+          perfectScores: (progress.stats?.perfectScores || 0) + (isPerfect ? 1 : 0),
+          testsCompleted: Object.keys(testResults).filter((k) => testResults[k]?.attempts > 0).length,
+        },
+      });
     },
     [progress, persist],
   );
@@ -114,15 +179,31 @@ export function ProgressProvider({ children }) {
   const value = useMemo(
     () => ({
       progress,
+      syncing,
+      pendingUnlocks,
+      dismissUnlock,
       addXP,
       recordNoteRead,
       recordVideoWatch,
       recordTestResult,
       setSubjectProgress,
       getTestProgress,
-      badgeDefinitions: BADGE_RULES,
+      badgeDefinitions: BADGES,
+      syncToServer,
     }),
-    [progress, addXP, recordNoteRead, recordVideoWatch, recordTestResult, setSubjectProgress, getTestProgress],
+    [
+      progress,
+      syncing,
+      pendingUnlocks,
+      dismissUnlock,
+      addXP,
+      recordNoteRead,
+      recordVideoWatch,
+      recordTestResult,
+      setSubjectProgress,
+      getTestProgress,
+      syncToServer,
+    ],
   );
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;

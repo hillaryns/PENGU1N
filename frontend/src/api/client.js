@@ -1,9 +1,29 @@
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
+function getUserEmail() {
+  try {
+    const raw = localStorage.getItem('user');
+    if (!raw) return null;
+    return JSON.parse(raw).email || null;
+  } catch {
+    return null;
+  }
+}
+
+export function authHeaders(extra = {}) {
+  const email = getUserEmail();
+  return {
+    ...(email ? { 'x-user-email': email } : {}),
+    ...extra,
+  };
+}
+
 async function request(path, options = {}) {
+  const isFormData = options.body instanceof FormData;
   const response = await fetch(`${API_BASE}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      ...authHeaders(),
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       ...options.headers,
     },
     ...options,
@@ -54,4 +74,20 @@ export const api = {
     request('/forgot-email-request', { method: 'POST', body: JSON.stringify(body) }),
   forgotEmailVerify: (body) =>
     request('/forgot-email-verify', { method: 'POST', body: JSON.stringify(body) }),
+
+  getProfile: (id = 'me') => request(`/profile/${id}`),
+  updateProfile: (body) =>
+    request('/profile/update', { method: 'PUT', body: JSON.stringify(body) }),
+  uploadAvatar: (file) => {
+    const fd = new FormData();
+    fd.append('avatar', file);
+    return request('/profile/upload-avatar', { method: 'POST', body: fd });
+  },
+  removeAvatar: () => request('/profile/avatar', { method: 'DELETE' }),
+  syncProgress: (progress, sessionMinutes = 2) =>
+    request('/progress/sync', {
+      method: 'POST',
+      body: JSON.stringify({ progress, sessionMinutes }),
+    }),
+  getBadges: () => request('/profile/badges'),
 };

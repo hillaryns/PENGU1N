@@ -1,7 +1,8 @@
 import { NavLink, Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { usePageTransition } from '../context/PageTransitionContext';
 import Chatbox from './Chatbox';
+import GlobalTopBar from './GlobalTopBar';
+import SidebarProfile from './profile/SidebarProfile';
 
 const navItems = [
   { to: '/dashboard', icon: 'fa-home', label: 'Dashboard' },
@@ -15,14 +16,7 @@ const navItems = [
 ];
 
 export default function DashboardLayout() {
-  const { user, logout } = useAuth();
-  const runTransition = usePageTransition();
-  const initial = user?.name?.charAt(0)?.toUpperCase() || 'S';
-
-  const handleLogout = () => {
-    logout({ silent: true });
-    runTransition('/signin');
-  };
+  const { user } = useAuth();
 
   return (
     <div className="dashboard">
@@ -49,25 +43,12 @@ export default function DashboardLayout() {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="user-info">
-            <div className="user-avatar">{initial}</div>
-            <div className="user-details">
-              <h4>{user?.name || 'Student'}</h4>
-              <p>{user?.email || ''}</p>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            style={{ width: '100%', marginTop: '1rem' }}
-            onClick={handleLogout}
-          >
-            <i className="fas fa-sign-out-alt" /> Logout
-          </button>
+          <SidebarProfile />
         </div>
       </aside>
 
       <main className="main-content">
+        <GlobalTopBar />
         <Outlet />
       </main>
 

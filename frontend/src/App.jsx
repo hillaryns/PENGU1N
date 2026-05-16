@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ProgressProvider } from './context/ProgressContext';
 import { PageTransitionProvider } from './context/PageTransitionContext';
 import PageTransition from './components/PageTransition';
+import BadgeUnlockToast from './components/profile/BadgeUnlockToast';
 import CustomCursor from './components/CustomCursor';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './components/DashboardLayout';
@@ -36,6 +37,7 @@ export default function App() {
         <PageTransitionProvider>
           <CustomCursor />
           <PageTransition />
+          <BadgeUnlockToast />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />

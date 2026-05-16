@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import AnimatedCounter from '../components/AnimatedCounter';
 import DashboardAmbient from '../components/DashboardAmbient';
+import DashboardProfileCard from '../components/profile/DashboardProfileCard';
 import InteractiveCard from '../components/InteractiveCard';
 import { courses } from '../data/courses';
 
@@ -33,7 +34,15 @@ export default function Dashboard() {
   const badgesCount = (store.badges || []).length;
   const totalBadges = 12;
   const percent = Math.min(100, Math.round((badgesCount / totalBadges) * 100));
-  const firstName = user?.name?.split(' ')[0] || 'Student';
+  const firstName = (user?.displayName || user?.name)?.split(' ')[0] || 'Student';
+  const notesRead = store.notesRead?.length ?? 0;
+  const testsTaken = Object.keys(store.testResults || {}).filter(
+    (k) => store.testResults[k]?.attempts > 0,
+  ).length;
+  const questionsAnswered = Object.values(store.testResults || {}).reduce(
+    (s, r) => s + (r.totalAnswered || 0),
+    0,
+  );
   const recommended = courses.filter((c) => c.trending).slice(0, 2);
 
   useEffect(() => {
@@ -53,6 +62,8 @@ export default function Dashboard() {
       </motion.div>
 
       <div className="main-content-inner">
+        <DashboardProfileCard />
+
         <motion.div className="dashboard-header" variants={fadeUp}>
           <h1 className="welcome-text">Welcome back, {firstName}! 👋</h1>
           <p className="welcome-subtitle">Continue your learning journey</p>
@@ -65,7 +76,7 @@ export default function Dashboard() {
               <div className="stat-icon"><i className="fas fa-book" /></div>
             </div>
             <motion.div className="stat-value">
-              <AnimatedCounter value={progress.notesRead || 0} />
+              <AnimatedCounter value={notesRead} />
             </motion.div>
           </motion.div>
 
@@ -75,7 +86,7 @@ export default function Dashboard() {
               <div className="stat-icon"><i className="fas fa-check" /></div>
             </div>
             <div className="stat-value">
-              <AnimatedCounter value={progress.questionsAnswered || 0} />
+              <AnimatedCounter value={questionsAnswered} />
             </div>
           </motion.div>
 
@@ -85,7 +96,7 @@ export default function Dashboard() {
               <div className="stat-icon"><i className="fas fa-clipboard" /></div>
             </div>
             <div className="stat-value">
-              <AnimatedCounter value={progress.testsTaken || 0} />
+              <AnimatedCounter value={testsTaken} />
             </div>
           </motion.div>
 
