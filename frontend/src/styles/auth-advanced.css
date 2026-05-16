@@ -1,0 +1,324 @@
+/* Glass panels & premium auth accents — loads after base styles */
+
+.auth-glass-panel {
+  padding: 2rem 1.75rem;
+  border-radius: 20px;
+  background: linear-gradient(
+    145deg,
+    rgba(12, 28, 58, 0.55) 0%,
+    rgba(6, 14, 36, 0.72) 100%
+  );
+  border: 1px solid rgba(100, 180, 255, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    0 0 80px rgba(64, 156, 255, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.auth-glass-panel:hover {
+  border-color: rgba(120, 200, 255, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 28px 56px rgba(0, 0, 0, 0.5),
+    0 0 100px rgba(80, 170, 255, 0.18);
+}
+
+.auth-signup-wide {
+  max-width: 480px !important;
+}
+
+.auth-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.auth-inline-link {
+  color: var(--accent-primary, #5eb8ff);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.92;
+  transition: opacity 0.2s ease, text-shadow 0.25s ease;
+}
+
+.auth-inline-link:hover {
+  opacity: 1;
+  text-shadow: 0 0 12px rgba(100, 190, 255, 0.55);
+}
+
+.password-field-wrap {
+  position: relative;
+}
+
+.password-field-wrap .form-input {
+  padding-right: 2.75rem;
+}
+
+.password-toggle-eye {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: rgba(180, 210, 255, 0.75);
+  cursor: pointer;
+  padding: 0.35rem;
+  font-size: 1rem;
+  line-height: 1;
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.password-toggle-eye:hover {
+  color: #fff;
+  filter: drop-shadow(0 0 6px rgba(100, 180, 255, 0.7));
+}
+
+.field-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: rgba(180, 205, 235, 0.65);
+}
+
+.field-error {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: #ff8a9a;
+  line-height: 1.35;
+}
+
+.field-error-form {
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.form-input.input-invalid {
+  border-color: rgba(255, 120, 140, 0.65);
+  box-shadow: 0 0 0 1px rgba(255, 100, 120, 0.2);
+}
+
+.password-rules-mini {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: rgba(190, 210, 235, 0.65);
+}
+
+.password-rules-mini li {
+  padding-left: 1rem;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.password-rules-mini li::before {
+  content: '○';
+  position: absolute;
+  left: 0;
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
+
+.password-rules-mini li.ok {
+  color: rgba(120, 230, 180, 0.95);
+}
+
+.password-rules-mini li.ok::before {
+  content: '●';
+  color: rgba(80, 220, 160, 1);
+}
+
+/* OTP */
+.otp-input-row {
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.otp-cell {
+  width: 2.65rem;
+  height: 3rem;
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(100, 170, 255, 0.35);
+  background: rgba(4, 12, 32, 0.65);
+  color: #eaf4ff;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4) inset,
+    0 0 20px rgba(60, 140, 255, 0.12);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.otp-cell:focus {
+  outline: none;
+  border-color: rgba(140, 210, 255, 0.85);
+  box-shadow:
+    0 0 0 2px rgba(80, 160, 255, 0.35),
+    0 0 28px rgba(80, 170, 255, 0.35);
+  background: rgba(8, 22, 52, 0.85);
+}
+
+.otp-cell:disabled {
+  opacity: 0.55;
+}
+
+.auth-verify-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* Spinners */
+.auth-spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(200, 220, 255, 0.85);
+}
+
+.auth-spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid rgba(80, 140, 220, 0.25);
+  border-top-color: rgba(120, 200, 255, 0.95);
+  animation: auth-spin 0.85s linear infinite;
+  box-shadow: 0 0 24px rgba(80, 160, 255, 0.25);
+}
+
+.auth-spinner.tiny {
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.45rem;
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.auth-btn-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.auth-loading-screen {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(20, 40, 80, 0.35) 0%, transparent 65%);
+}
+
+/* Success states */
+.verify-success {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.verify-success-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a1f14;
+  background: linear-gradient(135deg, #5af0b5 0%, #2ec88a 100%);
+  box-shadow:
+    0 0 0 4px rgba(80, 220, 160, 0.25),
+    0 16px 40px rgba(0, 0, 0, 0.45);
+  animation: verify-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes verify-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.email-reveal-block {
+  text-align: center;
+}
+
+.masked-email-line {
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: rgba(200, 220, 255, 0.9);
+  margin: 0.75rem 0;
+  word-break: break-all;
+}
+
+.full-email-line {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(100, 190, 255, 0.45);
+  word-break: break-all;
+}
+
+.form-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .auth-page .page {
+    padding-left: 1rem !important;
+    padding-right: 1rem;
+    justify-content: center !important;
+  }
+
+  body.auth-page .form-container,
+  .auth-page .form-container {
+    max-width: 100% !important;
+    margin: 0 auto;
+  }
+
+  .otp-cell {
+    width: 2.35rem;
+    height: 2.75rem;
+    font-size: 1.15rem;
+  }
+
+  .auth-glass-panel {
+    padding: 1.5rem 1.25rem;
+  }
+}

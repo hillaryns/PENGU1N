@@ -22,6 +22,12 @@ import Classes from './pages/Classes';
 import VideoWatch from './pages/VideoWatch';
 import Internships from './pages/Internships';
 import Profile from './pages/Profile';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyResetOTP from './pages/VerifyResetOTP';
+import ResetPassword from './pages/ResetPassword';
+import ForgotEmail from './pages/ForgotEmail';
+import VerifyEmailRecoveryOTP from './pages/VerifyEmailRecoveryOTP';
 
 export default function App() {
   return (
@@ -35,6 +41,12 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/verify-reset-otp" element={<VerifyResetOTP />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/forgot-email" element={<ForgotEmail />} />
+            <Route path="/verify-email-recovery" element={<VerifyEmailRecoveryOTP />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/subjects" element={<Subjects />} />
             <Route path="/subject/:slug" element={<SubjectDetail />} />

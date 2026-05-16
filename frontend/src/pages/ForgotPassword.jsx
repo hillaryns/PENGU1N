@@ -1,0 +1,61 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import SmokeBackground from '../components/SmokeBackground';
+import PublicNavbar from '../components/PublicNavbar';
+import { api } from '../api/client';
+import { showToast } from '../utils/toast';
+
+export default function ForgotPassword() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.forgotPassword({ email });
+      showToast('If an account exists, check your email for a code.');
+      navigate('/verify-reset-otp', { state: { email } });
+    } catch (err) {
+      showToast(err.message || 'Request failed', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-page">
+      <SmokeBackground />
+      <PublicNavbar />
+      <main className="page">
+        <motion.div className="form-container auth-glass-panel" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="form-header">
+            <h1 className="form-title">Forgot Password</h1>
+            <p className="form-subtitle">We&apos;ll send a reset code to your email</p>
+          </div>
+          <form onSubmit={submit}>
+            <div className="form-group">
+              <label className="form-label" htmlFor="fp-email">Email</label>
+              <input
+                id="fp-email"
+                className="form-input"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary form-btn" disabled={loading}>
+              {loading ? 'Sending...' : 'Send code'}
+            </button>
+          </form>
+          <p className="form-footer">
+            <Link to="/signin">Back to Sign In</Link>
+          </p>
+        </motion.div>
+      </main>
+    </div>
+  );
+}

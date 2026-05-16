@@ -2,8 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,6 +11,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
 const DB_NAME = process.env.DB_NAME || 'pengu1n';
 const COLLECTION_NAME = process.env.COLLECTION_NAME || 'userDetails';
 
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 
@@ -22,6 +23,14 @@ async function connectDatabase() {
   await client.connect();
   db = client.db(DB_NAME);
   usersCollection = db.collection(COLLECTION_NAME);
+
+  try {
+    await usersCollection.createIndex({ email: 1 }, { unique: true });
+    await usersCollection.createIndex({ username: 1 }, { unique: true, sparse: true });
+  } catch (idxErr) {
+    console.warn('MongoDB index warning (resolve duplicates if needed):', idxErr.message);
+  }
+
   console.log(`MongoDB connected: ${MONGODB_URI} / ${DB_NAME}`);
   return client;
 }
@@ -37,6 +46,7 @@ app.get('/health', async (req, res) => {
     res.json({
       success: true,
       message: 'MongoDB connected',
+      apiVersion: 2,
       database: DB_NAME,
       collection: COLLECTION_NAME,
       users: count,
@@ -50,89 +60,18 @@ app.get('/health', async (req, res) => {
   }
 });
 
-app.post('/signup', async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ success: false, message: 'All fields required' });
-    }
-
-    const existingUser = await usersCollection.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = {
-      name,
-      email,
-      password: hashedPassword,
-      progress: {
-        notesRead: 0,
-        questionsAnswered: 0,
-        testsTaken: 0,
-        badges: [],
-      },
-      createdAt: new Date(),
-    };
-
-    await usersCollection.insertOne(newUser);
-
-    res.status(201).json({
-      success: true,
-      message: 'Signup successful',
-      user: { name, email },
-    });
-  } catch (error) {
-    console.error('Signup error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-});
-
-app.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and password required' });
-    }
-
-    const user = await usersCollection.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ success: false, message: 'User not found' });
-    }
-
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(400).json({ success: false, message: 'Wrong password' });
-    }
-
-    res.json({
-      success: true,
-      message: 'Login successful',
-      user: {
-        name: user.name,
-        email: user.email,
-        progress: user.progress || {
-          notesRead: 0,
-          questionsAnswered: 0,
-          testsTaken: 0,
-          badges: [],
-        },
-      },
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-});
-
 async function startServer() {
   try {
     await connectDatabase();
+
+    // Mount after DB is ready so controllers receive the real collection (not undefined).
+    const auth = authRoutes(usersCollection);
+    app.use(auth);
+    app.use('/api', auth);
+
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
+      console.log('Auth routes: /signup, /login, … (also under /api/*)');
     });
   } catch (error) {
     console.error('Failed to start server:', error.message);
