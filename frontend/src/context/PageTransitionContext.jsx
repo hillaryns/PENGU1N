@@ -31,16 +31,23 @@ export function PageTransitionProvider({ children }) {
 
       const starContainer = transition.querySelector('.blackhole-stars');
       spawnStars(starContainer);
-      transition.classList.remove('active');
-      // Force animation restart on repeated transitions
+
+      document.body.classList.add('page-transitioning');
+
+      transition.classList.remove('active', 'fade-out');
       void transition.offsetWidth;
       transition.classList.add('active');
 
       window.setTimeout(() => {
         navigate(path);
         window.requestAnimationFrame(() => {
+          transition.classList.add('fade-out');
           transition.classList.remove('active');
-          if (starContainer) starContainer.innerHTML = '';
+          window.setTimeout(() => {
+            transition.classList.remove('fade-out');
+            document.body.classList.remove('page-transitioning');
+            if (starContainer) starContainer.innerHTML = '';
+          }, 450);
         });
       }, TRANSITION_DURATION_MS);
     },

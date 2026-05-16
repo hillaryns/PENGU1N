@@ -51,8 +51,19 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const refreshUser = () => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  };
+
   const value = useMemo(
-    () => ({ user, loading, login, signup, logout, isAuthenticated: !!user }),
+    () => ({ user, loading, login, signup, logout, refreshUser, isAuthenticated: !!user }),
     [user, loading],
   );
 

@@ -932,60 +932,7 @@ img {
   margin-bottom: 2rem;
 }
 
-.dashboard-gif { 
-  position: absolute;
-  right: 0;
-  top: 0;
-  pointer-events: none;
-  width: clamp(240px, 28vw, 520px);
-  max-width: 40%;
-  z-index: 0;
-}
-
-.dashboard-gif img {
-  width: 100%;
-  height: auto;
-
-}
-
-/* On wide screens reserve space so content doesn't overlap */
-@media (min-width: 1200px) {
-  .main-content {
-    margin-right: clamp(280px, 34vw, 560px);
-  }
-}
-
-/* Ensure content doesn't sit under image at medium widths */
-@media (min-width: 1025px) and (max-width: 1199px) {
-  .main-content {
-    margin-right: clamp(220px, 28vw, 420px);
-  }
-}
-
-@media (max-width: 1024px) {
-  .dashboard-gif {
-    display: block;
-    position: fixed;
-    right: 12px;
-    bottom: 12px;
-    top: auto;
-    width: clamp(120px, 22vw, 240px);
-    max-width: 40%;
-    z-index: 10;
-    pointer-events: none;
-    opacity: 0.95;
-    transform: translateZ(0);
-  }
-  .main-content { margin-right: 0; }
-}
-
-@media (max-width: 480px) {
-  .dashboard-gif {
-    width: clamp(90px, 28vw, 160px);
-    right: 10px;
-    bottom: 10px;
-  }
-}
+/* dashboard-gif + main-content width: see premium.css */
 
 .welcome-text {
   font-size: 1.75rem;
@@ -2234,19 +2181,6 @@ img {
     right: 1rem;
   }
 
-  .dashboard-gif {
-    display: block;
-    position: fixed;
-    right: 12px;
-    bottom: 12px;
-    top: auto;
-    width: clamp(110px, 20vw, 220px);
-    max-width: 40%;
-    z-index: 10;
-    pointer-events: none;
-    opacity: 0.95;
-    transform: translateZ(0);
-  }
 }
 
 @media (max-width: 480px) {

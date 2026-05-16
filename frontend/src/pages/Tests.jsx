@@ -1,51 +1,95 @@
+import { useState } from 'react';
 import { tests } from '../data/tests';
-import { showToast } from '../utils/toast';
+import TestCard from '../components/TestCard';
+import { useProgress } from '../context/ProgressContext';
+import { LEADERBOARD } from '../data/leaderboard';
 
-const levelStyles = {
-  Beginner: {},
-  Intermediate: { background: 'rgba(234, 179, 8, 0.1)', color: '#eab308' },
-  Advanced: { background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' },
-};
+const filters = ['All', 'Beginner', 'Intermediate', 'Advanced', 'Trending'];
 
 export default function Tests() {
-  const startTest = (title) => {
-    showToast(`Starting ${title}... (demo mode)`);
-  };
+  const [filter, setFilter] = useState('All');
+  const { progress } = useProgress();
+
+  const filtered = tests.filter((test) => {
+    if (filter === 'All') return true;
+    if (filter === 'Trending') return test.trending;
+    return test.level === filter;
+  });
+
+  const recentResults = Object.entries(progress.testResults || {})
+    .filter(([, r]) => r.attempts > 0)
+    .sort((a, b) => (b[1].lastAttempt || 0) - (a[1].lastAttempt || 0))
+    .slice(0, 5);
 
   return (
-    <>
+    <div className="tests-page">
       <div className="dashboard-header">
-        <h1 className="welcome-text">Tests 📝</h1>
-        <p className="welcome-subtitle">Challenge yourself with timed assessments</p>
+        <h1 className="welcome-text">Tests</h1>
+        <p className="welcome-subtitle">
+          {filtered.length} assessments · {progress.xp || 0} XP earned
+        </p>
       </div>
 
-      <div className="grid grid-2">
-        {tests.map((test) => (
-          <div key={test.id} className="test-card">
-            <div className="test-header">
-              <h3 className="test-title">{test.title}</h3>
-              <span className="test-badge" style={levelStyles[test.level]}>
-                {test.level}
-              </span>
-            </div>
-            <div className="test-meta">
-              <span><i className="fas fa-question-circle" /> {test.questions} Questions</span>
-              <span><i className="fas fa-clock" /> {test.minutes} mins</span>
-            </div>
-            <div className="test-progress">
-              <div className="progress-bar">
-                <div className="progress-fill" style={{ width: '0%' }} />
-              </div>
-            </div>
-            <button type="button" className="btn btn-primary" onClick={() => startTest(test.title)}>
-              Start Test
-            </button>
-          </div>
+      <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', marginBottom: '2rem' }}>
+        <div className="stat-card stat-card-neon">
+          <span className="stat-label">Tests Completed</span>
+          <div className="stat-value">{recentResults.length}</div>
+        </div>
+        <div className="stat-card stat-card-neon">
+          <span className="stat-label">Total XP</span>
+          <div className="stat-value">{progress.xp || 0}</div>
+        </div>
+        <div className="stat-card stat-card-neon">
+          <span className="stat-label">Streak</span>
+          <div className="stat-value">{progress.streak || 0}</div>
+        </div>
+      </div>
+
+      <div className="courses-toolbar">
+        {filters.map((f) => (
+          <button key={f} type="button" className={`filter-chip${filter === f ? ' active' : ''}`} onClick={() => setFilter(f)}>
+            {f}
+          </button>
         ))}
       </div>
 
-      <h2 className="section-title" style={{ marginTop: '3rem' }}>Recent Results</h2>
-      <p style={{ color: 'var(--text-secondary)' }}>No tests taken yet. Start a test above!</p>
-    </>
+      <div className="grid grid-2 tests-grid">
+        {filtered.map((test, index) => (
+          <TestCard key={test.id} test={test} index={index} />
+        ))}
+      </div>
+
+      <h2 className="section-title" style={{ marginTop: '3rem' }}>Leaderboard</h2>
+      <div className="leaderboard" style={{ marginBottom: '2rem' }}>
+        {[...LEADERBOARD].sort((a, b) => b.xp - a.xp).map((row, i) => (
+          <div key={row.name} className="leaderboard-row">
+            <span className="lb-rank">#{i + 1}</span>
+            <span className="lb-name">{row.name}</span>
+            <span className="lb-xp">{row.xp} XP</span>
+          </div>
+        ))}
+        <div className="leaderboard-row you">
+          <span className="lb-rank">—</span>
+          <span className="lb-name">You</span>
+          <span className="lb-xp">{progress.xp || 0} XP</span>
+        </div>
+      </div>
+
+      <h2 className="section-title">Recent Results</h2>
+      {recentResults.length === 0 ? (
+        <p style={{ color: 'var(--text-secondary)' }}>No tests taken yet. Start a test above!</p>
+      ) : (
+        <div className="result-breakdown">
+          {recentResults.map(([testId, result]) => {
+            const meta = tests.find((t) => t.id === testId);
+            return (
+              <div key={testId} className={`result-item ${result.passed ? 'correct' : 'wrong'}`}>
+                <strong>{meta?.title || testId}</strong> — {result.lastScore}% ({result.passed ? 'Passed' : 'Failed'}) · Attempt #{result.attempts}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }

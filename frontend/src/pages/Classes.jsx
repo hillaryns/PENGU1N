@@ -1,80 +1,101 @@
 import { useMemo, useState } from 'react';
-import { videos } from '../data/videos';
+import { motion } from 'framer-motion';
+import { VIDEO_CATEGORIES, videos } from '../data/videos';
+import VideoCard from '../components/VideoCard';
+import { useProgress } from '../context/ProgressContext';
 
-const FILTERS = ['all', 'html', 'css', 'js', 'python'];
+const DIFFICULTIES = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
 export default function Classes() {
-  const [filter, setFilter] = useState('all');
-  const [activeVideo, setActiveVideo] = useState(null);
+  const [category, setCategory] = useState('all');
+  const [difficulty, setDifficulty] = useState('All');
+  const [search, setSearch] = useState('');
+  const { progress } = useProgress();
 
-  const filtered = useMemo(
-    () => (filter === 'all' ? videos : videos.filter((v) => v.subject === filter)),
-    [filter],
-  );
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return videos.filter((v) => {
+      if (category !== 'all' && v.category !== category) return false;
+      if (difficulty !== 'All' && v.level !== difficulty) return false;
+      if (q && !v.title.toLowerCase().includes(q) && !v.instructor.toLowerCase().includes(q) && !v.tags?.some((t) => t.toLowerCase().includes(q))) return false;
+      return true;
+    });
+  }, [category, difficulty, search]);
+
+  const continueList = useMemo(() => {
+    return Object.entries(progress.videosWatched || {})
+      .filter(([, data]) => data.percent > 0 && data.percent < 100)
+      .sort((a, b) => (b[1].lastWatched || 0) - (a[1].lastWatched || 0))
+      .map(([id]) => videos.find((v) => v.id === id))
+      .filter(Boolean)
+      .slice(0, 3);
+  }, [progress.videosWatched]);
 
   return (
-    <>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div className="dashboard-header">
         <h1 className="welcome-text">Video Classes 🎥</h1>
-        <p className="welcome-subtitle">Learn from curated video playlists</p>
+        <p className="welcome-subtitle">{filtered.length} lessons — real YouTube embeds</p>
       </div>
 
-      <div className="practice-filters">
-        {FILTERS.map((item) => (
+      <div className="search-container">
+        <i className="fas fa-search search-icon" />
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search videos, instructors, tags..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className="courses-toolbar">
+        {VIDEO_CATEGORIES.map((cat) => (
           <button
-            key={item}
+            key={cat}
             type="button"
-            className={`filter-btn${filter === item ? ' active' : ''}`}
-            onClick={() => setFilter(item)}
+            className={`filter-chip${category === cat ? ' active' : ''}`}
+            onClick={() => setCategory(cat)}
           >
-            {item === 'all' ? 'All' : item.toUpperCase()}
+            {cat === 'all' ? 'All' : cat.replace('-', '/').toUpperCase()}
           </button>
         ))}
       </div>
 
-      <div className="grid grid-3" id="videosContainer">
-        {filtered.map((video) => (
+      <motion.div className="courses-toolbar" style={{ marginTop: '0.5rem' }}>
+        {DIFFICULTIES.map((d) => (
           <button
-            key={video.id}
+            key={d}
             type="button"
-            className="card"
-            style={{ textAlign: 'left', padding: 0, overflow: 'hidden' }}
-            onClick={() => setActiveVideo(video)}
+            className={`filter-chip${difficulty === d ? ' active' : ''}`}
+            onClick={() => setDifficulty(d)}
           >
-            <img
-              src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
-              alt={video.title}
-              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover' }}
-            />
-            <div style={{ padding: '1rem' }}>
-              <h3 className="card-title">{video.title}</h3>
-              <p className="card-description">{video.duration} · {video.level}</p>
-            </div>
+            {d}
           </button>
         ))}
-      </div>
+      </motion.div>
 
-      {activeVideo && (
-        <div className="modal-overlay" style={{ display: 'flex' }} onClick={() => setActiveVideo(null)}>
-          <div className="modal" style={{ maxWidth: '900px', padding: 0 }} onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header" style={{ padding: '1.5rem' }}>
-              <h3 className="modal-title">{activeVideo.title}</h3>
-              <button type="button" className="modal-close" onClick={() => setActiveVideo(null)}>
-                <i className="fas fa-times" />
-              </button>
-            </div>
-            <div style={{ aspectRatio: '16/9', background: '#000' }}>
-              <iframe
-                title={activeVideo.title}
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${activeVideo.videoId}`}
-                allowFullScreen
-              />
-            </div>
+      {continueList.length > 0 && (
+        <section style={{ marginBottom: '2rem' }}>
+          <h2 className="section-title">Continue Watching</h2>
+          <div className="grid grid-3">
+            {continueList.map((v, i) => (
+              <VideoCard key={v.id} video={v} index={i} progress={progress.videosWatched[v.id]?.percent} />
+            ))}
           </div>
-        </div>
+        </section>
       )}
-    </>
+
+      <div className="grid grid-3 courses-grid">
+        {filtered.map((video, index) => (
+          <VideoCard
+            key={video.id}
+            video={video}
+            index={index}
+            progress={progress.videosWatched[video.id]?.percent || 0}
+          />
+        ))}
+      </div>
+    </motion.div>
   );
 }
